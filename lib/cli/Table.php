@@ -137,15 +137,17 @@ class Table {
 	 */
 	public function getDisplayLines() {
 		$this->_renderer->setWidths($this->_width, $fallback = true);
-		$border = $this->_renderer->border();
+		$border_top = $this->_renderer->border_top();
+		$border_middle = $this->_renderer->border_middle();
+		$border_bottom = $this->_renderer->border_bottom();
 
 		$out = array();
-		if (isset($border)) {
-			$out[] = $border;
+		if (isset($border_top)) {
+			$out[] = $border_top;
 		}
 		$out[] = $this->_renderer->row($this->_headers);
-		if (isset($border)) {
-			$out[] = $border;
+		if (isset($border_middle)) {
+			$out[] = $border_middle;
 		}
 
 		foreach ($this->_rows as $row) {
@@ -154,14 +156,14 @@ class Table {
 			$out = array_merge( $out, $row );
 		}
 
-		if (isset($border)) {
-			$out[] = $border;
+		if (isset($border_bottom)) {
+			$out[] = $border_bottom;
 		}
 
 		if ($this->_footers) {
 			$out[] = $this->_renderer->row($this->_footers);
-			if (isset($border)) {
-				$out[] = $border;
+			if (isset($border_bottom)) {
+				$out[] = $border_bottom;
 			}
 		}
 		return $out;

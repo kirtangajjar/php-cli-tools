@@ -20,12 +20,22 @@ use cli\Shell;
  */
 class Ascii extends Renderer {
 	protected $_characters = array(
-		'corner'  => '+',
-		'line'    => '-',
-		'border'  => '|',
+		'corner-top-left'  => '╭',
+		'corner-top-middle'  => '┬',
+		'corner-top-right'  => '╮',
+		'corner-bottom-left'  => '╰',
+		'corner-bottom-middle'  => '┴',
+		'corner-bottom-right'  => '╯',
+		'corner-middle-left'  => '├',
+		'corner-middle-middle'  => '┼',
+		'corner-middle-right'  => '┤',
+		'line'    => '─',
+		'border'  => '│',
 		'padding' => ' ',
 	);
-	protected $_border = null;
+	protected $_border_top = null;
+	protected $_border_bottom = null;
+	protected $_border_middle = null;
 	protected $_constraintWidth = null;
 	protected $_pre_colorized = false;
 
@@ -106,21 +116,66 @@ class Ascii extends Renderer {
 	}
 
 	/**
-	 * Render a border for the top and bottom and separating the headers from the
-	 * table rows.
+	 * Render a border for the top line.
 	 *
 	 * @return string  The table border.
 	 */
-	public function border() {
-		if (!isset($this->_border)) {
-			$this->_border = $this->_characters['corner'];
-			foreach ($this->_widths as $width) {
-				$this->_border .= str_repeat($this->_characters['line'], $width + 2);
-				$this->_border .= $this->_characters['corner'];
+	public function border_top() {
+		if (!isset($this->_border_top)) {
+			$this->_border_top = $this->_characters['corner-top-left'];
+			foreach ($this->_widths as $index => $width) {
+				$this->_border_top .= str_repeat($this->_characters['line'], $width + 2);
+				if( $index === count( $this->_widths ) - 1 ) {
+					$this->_border_top .= $this->_characters['corner-top-right'];
+				} else {
+					$this->_border_top .= $this->_characters['corner-top-middle'];
+				}
 			}
 		}
 
-		return $this->_border;
+		return $this->_border_top;
+	}
+
+	/**
+	 * Render a border for the bottom line.
+	 *
+	 * @return string  The table border.
+	 */
+	public function border_bottom() {
+		if (!isset($this->_border_bottom)) {
+			$this->_border_bottom = $this->_characters['corner-bottom-left'];
+			foreach ($this->_widths as $index => $width) {
+				$this->_border_bottom .= str_repeat($this->_characters['line'], $width + 2);
+				if( $index === count( $this->_widths ) - 1 ) {
+					$this->_border_bottom .= $this->_characters['corner-bottom-right'];
+				} else {
+					$this->_border_bottom .= $this->_characters['corner-bottom-middle'];
+				}
+			}
+		}
+
+		return $this->_border_bottom;
+	}
+
+	/**
+	 * Render a border for the middle line.
+	 *
+	 * @return string  The table border.
+	 */
+	public function border_middle() {
+		if (!isset($this->_border_middle)) {
+			$this->_border_middle = $this->_characters['corner-middle-left'];
+			foreach ($this->_widths as $index => $width) {
+				$this->_border_middle .= str_repeat($this->_characters['line'], $width + 2);
+				if( $index === count( $this->_widths ) - 1 ) {
+					$this->_border_middle .= $this->_characters['corner-middle-right'];
+				} else {
+					$this->_border_middle .= $this->_characters['corner-middle-middle'];
+				}
+			}
+		}
+
+		return $this->_border_middle;
 	}
 
 	/**
